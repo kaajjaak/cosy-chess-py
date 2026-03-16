@@ -20,7 +20,7 @@ Python bindings for [cozy-chess](https://github.com/analog-hors/cozy-chess) — 
 ### Build from source
 
 ```bash
-git clone https://github.com/yourusername/cosy-chess-py
+git clone https://github.com/kaajjaak/cosy-chess-py
 cd cosy-chess-py
 
 python -m venv .venv
