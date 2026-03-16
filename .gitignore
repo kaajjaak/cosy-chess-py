@@ -1,0 +1,26 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+.venv/
+*.egg-info/
+dist/
+build/
+
+# Rust
+target/
+Cargo.lock
+
+# Maturin outputs
+*.pyd
+*.so
+*.dll
+
+# IDE
+.idea/
+.vscode/
+*.iml
+
+# Temp files
+*.txt
+maturin_output.*
