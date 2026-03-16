@@ -37,13 +37,13 @@ jobs:
             target: x86_64
             manylinux: "off"
 
-          # macOS Intel
-          - os: macos-13
+          # macOS Intel (cross-compiled from Apple Silicon runner)
+          - os: macos-latest
             target: x86_64
             manylinux: "off"
 
-          # macOS Apple Silicon (M-series)
-          - os: macos-14
+          # macOS Apple Silicon (M-series, native)
+          - os: macos-latest
             target: aarch64
             manylinux: "off"
 
