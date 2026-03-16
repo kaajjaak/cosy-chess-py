@@ -38,7 +38,7 @@ jobs:
       - name: Build wheel and install
         run: |
           maturin build --release --out dist
-          pip install --find-links dist cozy-chess
+          pip install --find-links dist cozy-chess-py
 
       - name: Run tests
         run: python -m pytest tests/ -v
