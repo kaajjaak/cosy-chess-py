@@ -32,8 +32,10 @@ jobs:
       - name: Install maturin and pytest
         run: pip install maturin pytest
 
-      - name: Build and install the extension
-        run: maturin develop --release
+      - name: Build wheel and install
+        run: |
+          maturin build --release --out dist
+          pip install --find-links dist cozy-chess
 
       - name: Run tests
         run: python -m pytest tests/ -v
