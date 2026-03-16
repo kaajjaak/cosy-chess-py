@@ -1,0 +1,108 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - "v*"   # triggers on v0.1.0, v1.2.3, etc.
+
+permissions:
+  contents: read
+  # Required for PyPI trusted publishing (OIDC)
+  id-token: write
+
+jobs:
+  # ── Build wheels for all platforms ─────────────────────────────────────
+  build:
+    name: Build wheels (${{ matrix.platform.target }})
+    runs-on: ${{ matrix.platform.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        platform:
+          # Linux x86-64 (manylinux)
+          - os: ubuntu-latest
+            target: x86_64
+            manylinux: auto
+
+          # Linux ARM64 (manylinux)
+          - os: ubuntu-latest
+            target: aarch64
+            manylinux: auto
+
+          # Windows x86-64
+          - os: windows-latest
+            target: x86_64
+            manylinux: "off"
+
+          # macOS Intel
+          - os: macos-13
+            target: x86_64
+            manylinux: "off"
+
+          # macOS Apple Silicon (M-series)
+          - os: macos-14
+            target: aarch64
+            manylinux: "off"
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Build wheels
+        uses: PyO3/maturin-action@v1
+        with:
+          target: ${{ matrix.platform.target }}
+          manylinux: ${{ matrix.platform.manylinux }}
+          args: --release --out dist --interpreter 3.8 3.9 3.10 3.11 3.12 3.13
+          sccache: "true"
+
+      - name: Upload wheels
+        uses: actions/upload-artifact@v4
+        with:
+          name: wheels-${{ matrix.platform.target }}-${{ matrix.platform.os }}
+          path: dist/*.whl
+
+  # ── Build the sdist (source distribution) ──────────────────────────────
+  sdist:
+    name: Build sdist
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Build sdist
+        uses: PyO3/maturin-action@v1
+        with:
+          command: sdist
+          args: --out dist
+
+      - name: Upload sdist
+        uses: actions/upload-artifact@v4
+        with:
+          name: wheels-sdist
+          path: dist/*.tar.gz
+
+  # ── Publish to PyPI ────────────────────────────────────────────────────
+  publish:
+    name: Publish to PyPI
+    needs: [build, sdist]
+    runs-on: ubuntu-latest
+    environment:
+      name: pypi
+      url: https://pypi.org/project/cozy-chess-py/
+
+    steps:
+      - name: Download all artifacts
+        uses: actions/download-artifact@v4
+        with:
+          pattern: wheels-*
+          merge-multiple: true
+          path: dist
+
+      - name: Publish to PyPI
+        uses: pypa/gh-action-pypi-publish@release/v1
+        # Uses PyPI Trusted Publishing (OIDC) — no API token needed!
+        # See: https://docs.pypi.org/trusted-publishers/

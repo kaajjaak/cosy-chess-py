@@ -1,5 +1,8 @@
 # cozy-chess-py
 
+[![CI](https://github.com/kaajjaak/cosy-chess-py/actions/workflows/CI.yml/badge.svg)](https://github.com/kaajjaak/cosy-chess-py/actions/workflows/CI.yml)
+[![PyPI](https://img.shields.io/pypi/v/cozy-chess-py)](https://pypi.org/project/cozy-chess-py/)
+
 Python bindings for [cozy-chess](https://github.com/analog-hors/cozy-chess) — a fast, strongly-typed Rust chess move generation library. Built with [PyO3](https://pyo3.rs) and [maturin](https://maturin.rs).
 
 ## Features
@@ -8,10 +11,17 @@ Python bindings for [cozy-chess](https://github.com/analog-hors/cozy-chess) — 
 - Pythonic API with operator overloading, iteration, `__hash__`, `__copy__`, `__deepcopy__`
 - Complete type stubs (`.pyi`) for IDE autocompletion and type checking
 - Thin wrapper — performance stays close to the Rust core
+- **No Rust required for end users** — prebuilt wheels for Windows, Linux, and macOS
 
 ## Installation
 
-### Requirements
+```bash
+pip install cozy-chess-py
+```
+
+### Build from source
+
+#### Requirements
 
 - Python ≥ 3.8
 - Rust toolchain ([rustup.rs](https://rustup.rs))
@@ -210,6 +220,25 @@ python -m pytest tests/ -v
 ```
 
 96 tests, all passing.
+
+## Publishing a Release
+
+Wheels are built and published automatically via GitHub Actions.
+
+1. **Set up PyPI Trusted Publishing** (one-time):
+   - Go to [pypi.org](https://pypi.org) → Your account → Publishing
+   - Add a new trusted publisher: owner `kaajjaak`, repo `cosy-chess-py`, workflow `release.yml`
+
+2. **Tag a release**:
+   ```bash
+   git tag v0.1.0
+   git push origin v0.1.0
+   ```
+
+   GitHub Actions will automatically:
+   - Build wheels for Windows, Linux (x86_64 + ARM64), and macOS (Intel + Apple Silicon)
+   - Build for Python 3.8–3.13
+   - Upload everything to PyPI
 
 ## License
 
