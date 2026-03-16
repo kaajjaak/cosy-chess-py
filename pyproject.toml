@@ -3,10 +3,20 @@ requires = ["maturin>=1.0,<2.0"]
 build-backend = "maturin"
 
 [project]
-name = "cozy-chess"
+name = "cozy-chess-py"
 version = "0.1.0"
 description = "Python bindings for the cozy-chess Rust chess library"
+readme = "README.md"
+license = { text = "MIT" }
+authors = [{ name = "kaajjaak" }]
+keywords = ["chess", "move-generation", "rust"]
 requires-python = ">=3.8"
+classifiers = [
+    "Programming Language :: Rust",
+    "Programming Language :: Python :: Implementation :: CPython",
+    "Topic :: Games/Entertainment :: Board Games",
+    "License :: OSI Approved :: MIT License",
+]
 
 [tool.maturin]
 features = ["pyo3/extension-module"]
